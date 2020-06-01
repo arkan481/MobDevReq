@@ -4,6 +4,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,50 +15,34 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.mobdevrequirement.UI.Activity2nd;
+import com.example.mobdevrequirement.UI.Activity.LoginActivity;
+import com.example.mobdevrequirement.app.UserSessionManager;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView tvParagraph;
-    private EditText etInput;
-    private Button btnMove;
+    private TextView tvUN;
+    private Button btnLogOut;
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        tvParagraph = findViewById(R.id.tvParagraph);
-        etInput = findViewById(R.id.etInput);
-        btnMove = findViewById(R.id.btnMove);
+        tvUN = findViewById(R.id.tvUN);
+        btnLogOut = findViewById(R.id.btnLogOut);
 
-        tvParagraph.setJustificationMode(Layout.JUSTIFICATION_MODE_INTER_WORD);
+        tvUN.setText(UserSessionManager.getInstance(this).getUsername());
 
-        etInput.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                tvParagraph.setText(s);
-            }
-        });
-
-        btnMove.setOnClickListener(new View.OnClickListener() {
+        btnLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, Activity2nd.class);
-                intent.putExtra("prevtext",etInput.getText().toString());
+                UserSessionManager.getInstance(MainActivity.this).setLogout();
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
+
     }
 }
